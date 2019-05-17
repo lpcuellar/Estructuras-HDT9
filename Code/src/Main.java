@@ -1,18 +1,20 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Stream;
+
 
 public class Main {
 
     public static void main(String [] args) throws IOException {
 
         Scanner input = new Scanner(System.in);
+        ArrayList<Routes> routes = new ArrayList<>();
 
-        String mainMenu = "     --- RUTAS PARA GIRAS --- \n" +
+        String mainMenu = " \n " +
+                "\t     --- RUTAS PARA GIRAS --- \n" +
                 "\t 1. Ingresar ciudades\n" +
                 "\t 2. Indicar ciudad de origen y de destino\n" +
                 "\t 3. Indicar la ciudad del centro \n" +
@@ -36,39 +38,87 @@ public class Main {
             switch (option) {
 
                 case 1:
-                    // Leer el archivo .txt
-                    System.out.print("Ingrese el archivo de texto que desea leer: ");
-                    String userFile = input.nextLine();
-                    userFile = input.nextLine();
 
-                    try {
-                        Stream<String> lines = Files.lines(
-                                Paths.get(userFile),
-                                StandardCharsets.UTF_8
-                        );
+                    StringBuilder sb = new StringBuilder();
 
+                    try (BufferedReader br = Files.newBufferedReader(Paths.get("guategrafo.txt"))) {
 
-                        lines.forEach(line -> {
-                            String[] routes = line.toUpperCase().split(",");
-                            System.out.println(Arrays.toString(routes));
-                        });
+                        // read line by line
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            sb.append(line).append("\n");
+                            String[] parts  = line.split(",");
+
+                            if (parts.length == 3) {
+                              String origen = parts[0];
+                              String destino = parts[1];
+                              String distancia = parts[2];
+
+                              int dis = Integer.parseInt(distancia);
+                              Routes newRout = new Routes(origen, destino, dis);
+                              routes.add(newRout);
+                            }
+
+                            System.out.println("Las ciudades han sido ingresadas con exito");
+                        }
+
+                    } catch (IOException e) {
+                        System.err.format("IOException: %s%n", e);
                     }
 
-                    catch (Exception e) {
-                        System.out.println("No se ha encontrado ningun archivo con ese nombre");
-                    }
                     break;
 
                 case 2:
+                    System.out.println("Ingrese la ciudad en la que quiere que inicie su ruta: ");
+                    String source = input.next();
+
+                    System.out.println("Ingrese la ciudad en la que quiere que termine su ruta: ");
+                    String destination = input.next();
+
+                    /* Calcular la ruta mas corta entre ambas ciudades */
                     break;
 
                 case 3:
+                    String centerCity;
+                    System.out.println("La ciudad del centro es : " + centerCity);
                     break;
 
                 case 4:
-                    break;
+                    int opcion;
+                    System.out.println(graphMenu);
+                    opcion = input.nextInt();
 
-                case 5:
+                    String sourceCity;
+                    String destinationCity;
+                    int distanceCity;
+
+                    switch (opcion) {
+                        case 1:
+                            System.out.println("Ingrese la ciudad origen: ");
+                            sourceCity = input.next();
+
+                            System.out.println("Ingrese la ciudad destino: ");
+                            destinationCity = input.next();
+
+                            /* Ingresar infinito en la distancia entre las dos ciudades mencionadas anteriormente */
+                            break;
+
+                        case 2:
+                            System.out.println("Ingrese la ciudad origen: ");
+                            sourceCity = input.next();
+
+                            System.out.println("Ingrese la ciudad destino: ");
+                            destinationCity = input.next();
+
+                            System.out.println("Ingrese la nueva distancia entre ambas ciudades: ");
+                            distanceCity = input.nextInt();
+
+                            /* Recorrer la matriz en busca de ambas ciudades e ingresar la nueva distancia entre dos ciudades */
+                            break;
+
+                        default:
+                            System.out.print("Por favor ingrese una opcion valida!");
+                    }
                     break;
 
                 default:
