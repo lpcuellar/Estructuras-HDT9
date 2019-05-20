@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -12,6 +14,9 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         ArrayList<Routes> routes = new ArrayList<>();
+        Map<String, Integer> cities = new HashMap<String, Integer>();
+        FloydA algorithm = new FloydA();
+        Matrix matriz = new Matrix(cities.size());
 
         String mainMenu = " \n " +
                 "\t     --- RUTAS PARA GIRAS --- \n" +
@@ -27,7 +32,9 @@ public class Main {
                 "\t 2. Modificar la distancia entre dos ciudades\n" +
                 "\t Ingrese el número de la opción que desea realizar: ";
 
+
         int option = 0;
+        int position= 0;
 
         while (option != 5) {
 
@@ -57,13 +64,76 @@ public class Main {
                               int dis = Integer.parseInt(distancia);
                               Routes newRout = new Routes(origen, destino, dis);
                               routes.add(newRout);
-                            }
 
-                            System.out.println("Las ciudades han sido ingresadas con exito");
+                              if (!cities.containsKey(origen)) {
+                                  cities.put(origen, position);
+                                  position += 1;
+                              }
+
+                            }
                         }
 
                     } catch (IOException e) {
                         System.err.format("IOException: %s%n", e);
+                    }
+
+
+                    System.out.println("Las rutas han sido agregadas con éxito!");
+
+                    int number_of_vertices = cities.size();
+                    int count = 1;
+                    int index = 0;
+                    int lugar = 0;
+                    int intSource = 0;
+                    int intDestination = 0;
+                    int intDistance = 0;
+                    int number_of_edges = 784;
+
+                    while (count <= number_of_edges) {
+
+                        intSource = index;
+                        if (intSource != number_of_vertices) {
+                            intDestination = lugar;
+
+                            if (lugar == number_of_vertices) {
+                                lugar = 0;
+                                index += 1;
+                            } else {
+                                lugar += 1;
+                            }
+                        }
+
+                        for (int i = 0; i < routes.size(); i++) {
+                            Routes x = routes.get(i);
+
+                            String bingo = "IDC";
+                            String eureca = "IDK";
+
+                            for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                if (entry.getValue().equals(intSource)) {
+                                    bingo = entry.getKey();
+                                }
+
+                            }
+
+                            if (x.getSource().equals(bingo)) {
+                                for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                    if (entry.getValue().equals(intDestination)) {
+                                        eureca = entry.getKey();
+                                    }
+
+                                }
+
+                                if (x.getDestination().equals(eureca)) {
+                                    intDistance = x.getDistance();
+                                    System.out.println(intDistance);
+                                    i = routes.size();
+                                }
+                            }
+                        }
+
+                        matriz.setEdge(intSource, intDestination, intDistance);
+                        count += 1;
                     }
 
                     break;
@@ -76,10 +146,69 @@ public class Main {
                     String destination = input.next();
 
                     /* Calcular la ruta mas corta entre ambas ciudades */
+                    /* Usar algoritmo de Floyd */
+
+                    number_of_vertices = cities.size();
+                    count = 1;
+                    index = 0;
+                    lugar = 0;
+                    intSource = 0;
+                    intDestination = 0;
+                    intDistance = 0;
+                    number_of_edges = 784;
+
+                    while (count <= number_of_edges) {
+
+                        intSource = index;
+                        if (intSource != number_of_vertices) {
+                            intDestination = lugar;
+
+                            if (lugar == number_of_vertices) {
+                                lugar = 0;
+                                index += 1;
+                            } else {
+                                lugar += 1;
+                            }
+                        }
+
+                        for (int i = 0; i < routes.size(); i++) {
+                            Routes x = routes.get(i);
+
+                            String bingo = "IDC";
+                            String eureca = "IDK";
+
+                            for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                if (entry.getValue().equals(intSource)) {
+                                    bingo = entry.getKey();
+                                }
+
+                            }
+
+                            if (x.getSource().equals(bingo)) {
+                                for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                    if (entry.getValue().equals(intDestination)) {
+                                        eureca = entry.getKey();
+                                    }
+
+                                }
+
+                                if (x.getDestination().equals(eureca)) {
+                                    intDistance = x.getDistance();
+                                    System.out.println(intDistance);
+                                    i = routes.size();
+                                }
+                            }
+                        }
+
+                        matriz.setEdge(intSource, intDestination, intDistance);
+                        count += 1;
+                    }
+
+                    algorithm.floydWarshall(matriz);
                     break;
 
                 case 3:
-                    String centerCity;
+                    String centerCity = " ";
                     System.out.println("La ciudad del centro es : " + centerCity);
                     break;
 
@@ -101,6 +230,65 @@ public class Main {
                             destinationCity = input.next();
 
                             /* Ingresar infinito en la distancia entre las dos ciudades mencionadas anteriormente */
+
+                            number_of_vertices = cities.size();
+                            count = 1;
+                            index = 0;
+                            lugar = 0;
+                            intSource = 0;
+                            intDestination = 0;
+                            intDistance = 0;
+                            number_of_edges = 784;
+
+                            while (count <= number_of_edges) {
+
+                                intSource = index;
+                                if (intSource != number_of_vertices) {
+                                    intDestination = lugar;
+
+                                    if (lugar == number_of_vertices) {
+                                        lugar = 0;
+                                        index += 1;
+                                    } else {
+                                        lugar += 1;
+                                    }
+                                }
+
+                                for (int i = 0; i < routes.size(); i++) {
+                                    Routes x = routes.get(i);
+
+                                    String bingo = "IDC";
+                                    String eureca = "IDK";
+
+                                    for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                        if (entry.getValue().equals(intSource)) {
+                                            bingo = entry.getKey();
+                                        }
+
+                                    }
+
+                                    if (x.getSource().equals(bingo)) {
+                                        for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                            if (entry.getValue().equals(intDestination)) {
+                                                eureca = entry.getKey();
+                                            }
+
+                                        }
+
+                                        if (x.getDestination().equals(eureca)) {
+                                            intDistance = x.getDistance();
+                                            System.out.println(intDistance);
+                                            i = routes.size();
+                                        }
+                                    }
+                                }
+
+                                matriz.setEdge(intSource, intDestination, intDistance);
+                                count += 1;
+                            }
+
+                            algorithm.floydWarshall(matriz);
+
                             break;
 
                         case 2:
@@ -114,11 +302,74 @@ public class Main {
                             distanceCity = input.nextInt();
 
                             /* Recorrer la matriz en busca de ambas ciudades e ingresar la nueva distancia entre dos ciudades */
+
+                            number_of_vertices = cities.size();
+                            count = 1;
+                            index = 0;
+                            lugar = 0;
+                            intSource = 0;
+                            intDestination = 0;
+                            intDistance = 0;
+                            number_of_edges = 784;
+
+                            while (count <= number_of_edges) {
+
+                                intSource = index;
+                                if (intSource != number_of_vertices) {
+                                    intDestination = lugar;
+
+                                    if (lugar == number_of_vertices) {
+                                        lugar = 0;
+                                        index += 1;
+                                    } else {
+                                        lugar += 1;
+                                    }
+                                }
+
+                                for (int i = 0; i < routes.size(); i++) {
+                                    Routes x = routes.get(i);
+
+                                    String bingo = "IDC";
+                                    String eureca = "IDK";
+
+                                    for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                        if (entry.getValue().equals(intSource)) {
+                                            bingo = entry.getKey();
+                                        }
+
+                                    }
+
+                                    if (x.getSource().equals(bingo)) {
+                                        for (Map.Entry<String, Integer> entry : cities.entrySet()) {
+                                            if (entry.getValue().equals(intDestination)) {
+                                                eureca = entry.getKey();
+                                            }
+
+                                        }
+
+                                        if (x.getDestination().equals(eureca)) {
+                                            intDistance = x.getDistance();
+                                            System.out.println(intDistance);
+                                            i = routes.size();
+                                        }
+                                    }
+                                }
+
+                                matriz.setEdge(intSource, intDestination, intDistance);
+                                count += 1;
+                            }
+
+                            algorithm.floydWarshall(matriz);
+
                             break;
 
                         default:
                             System.out.print("Por favor ingrese una opcion valida!");
                     }
+                    break;
+
+                case 5:
+                    option = 5;
                     break;
 
                 default:

@@ -34,6 +34,6 @@ public class Routes {
     }
 
     public String toString() {
-        return " Origen: " + source + " ; Destino: " + destination + " ; Distancia: " + distance + " km" ;
+        return source + ";" + destination + ";" + distance;
     }
 }
